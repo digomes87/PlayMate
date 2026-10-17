@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # One-time repository setup for the branch -> develop -> main pipeline:
 #   1. workflows may open pull requests (deliver.yml)
-#   2. deploy key + PROMOTE_DEPLOY_KEY secret (the automation that merges into develop and main)
+#   2. deploy key + PROMOTE_DEPLOY_KEY secret for Actions and Dependabot (the automation that merges into develop and main)
+#      merged work branches are deleted automatically
 #   3. ruleset "develop": people go through PRs with green tests; the deploy key merges
 #   4. ruleset "main": only the deploy key updates it; no force pushes, no deletion
 # Requires an authenticated gh CLI with admin rights on the repository.
@@ -19,6 +20,11 @@ create_deploy_key() {
   ssh-keygen -q -t ed25519 -N "" -C "$DEPLOY_KEY_TITLE" -f "$key_directory/key"
   gh repo deploy-key add "$key_directory/key.pub" --allow-write --title "$DEPLOY_KEY_TITLE"
   gh secret set PROMOTE_DEPLOY_KEY < "$key_directory/key"
+  gh secret set PROMOTE_DEPLOY_KEY --app dependabot < "$key_directory/key"
+}
+
+delete_branches_after_merge() {
+  gh api -X PATCH "repos/$repository" -F delete_branch_on_merge=true > /dev/null
 }
 
 remove_existing_deploy_key() {
@@ -84,6 +90,7 @@ allow_workflows_to_open_pull_requests() {
 }
 
 allow_workflows_to_open_pull_requests
+delete_branches_after_merge
 remove_existing_deploy_key
 create_deploy_key
 apply_ruleset develop "$(develop_ruleset)"

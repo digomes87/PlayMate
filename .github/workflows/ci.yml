@@ -12,6 +12,8 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Pull requests opened by the deliver workflow are already tested there.
 jobs:
   tests:
+    if: github.actor != 'github-actions[bot]'
     uses: ./.github/workflows/tests.yml
