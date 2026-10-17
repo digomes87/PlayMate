@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# One-time repository setup for the develop -> main pipeline:
-#   1. deploy key + PROMOTE_DEPLOY_KEY secret (the only actor allowed to update main)
-#   2. ruleset "develop": changes only through PRs with green tests
-#   3. ruleset "main": no direct updates, no force pushes, no deletion
+# One-time repository setup for the branch -> develop -> main pipeline:
+#   1. workflows may open pull requests (deliver.yml)
+#   2. deploy key + PROMOTE_DEPLOY_KEY secret (the automation that merges into develop and main)
+#   3. ruleset "develop": people go through PRs with green tests; the deploy key merges
+#   4. ruleset "main": only the deploy key updates it; no force pushes, no deletion
 # Requires an authenticated gh CLI with admin rights on the repository.
 set -euo pipefail
 
@@ -46,7 +47,8 @@ develop_ruleset() {
     { "type": "required_status_checks", "parameters": {
         "strict_required_status_checks_policy": true,
         "required_status_checks": [ { "context": "$REQUIRED_CHECK" } ] } }
-  ]
+  ],
+  "bypass_actors": [ { "actor_id": null, "actor_type": "DeployKey", "bypass_mode": "always" } ]
 }
 JSON
 }
@@ -76,6 +78,12 @@ apply_ruleset() {
   gh api -X PUT "repos/$repository/rulesets/$ruleset_id" --input - <<< "$ruleset_body" > /dev/null
 }
 
+allow_workflows_to_open_pull_requests() {
+  gh api -X PUT "repos/$repository/actions/permissions/workflow" \
+    -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true > /dev/null
+}
+
+allow_workflows_to_open_pull_requests
 remove_existing_deploy_key
 create_deploy_key
 apply_ruleset develop "$(develop_ruleset)"
