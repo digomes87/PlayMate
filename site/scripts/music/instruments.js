@@ -2,7 +2,7 @@ import { STEP_SECONDS } from './score.js';
 
 const PULSE_HARMONICS = 32;
 const PULSE_DUTY = 0.25;
-const BUS_VOLUME = 0.5;
+const BUS_VOLUME = 1.1;
 
 // 25% pulse wave, the thin "NES" timbre used for the chord stabs.
 function createPulseWave(audio) {
@@ -78,7 +78,7 @@ export function createInstruments(audio) {
   const noise = createNoiseBuffer(audio);
 
   const voices = {
-    lead: (event, start) => tone(audio, bus, { shape: 'square', frequency: event.frequency, start, seconds: event.steps * STEP_SECONDS * 0.9, volume: 0.09, release: 0.08 }),
+    lead: (event, start) => tone(audio, bus, { shape: 'square', frequency: event.frequency, start, seconds: event.steps * STEP_SECONDS * 0.9, volume: 0.11, release: 0.08 }),
     bass: (event, start) => tone(audio, bus, { shape: 'triangle', frequency: event.frequency, start, seconds: event.steps * STEP_SECONDS * 0.8, volume: 0.3, release: 0.05 }),
     stab: (event, start) => tone(audio, bus, { shape: pulse, frequency: event.frequency, start, seconds: STEP_SECONDS * 0.6, volume: 0.035, release: 0.06 }),
     kick: (event, start) => kick(audio, bus, start),

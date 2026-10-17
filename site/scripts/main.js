@@ -123,14 +123,19 @@ function syncMusicButton() {
   musicButton.textContent = musicButton.dataset[playing ? 'labelStop' : 'labelStart'];
 }
 
-musicButton.addEventListener('click', async () => {
+function showMusicError(error) {
+  console.error('Soundtrack could not start', error);
+  musicButton.setAttribute('aria-pressed', 'false');
+  musicButton.textContent = musicButton.dataset.labelError;
+}
+
+musicButton.addEventListener('click', () => {
   if (music.isPlaying()) {
     music.stop();
     syncMusicButton();
     return;
   }
-  await music.start();
-  syncMusicButton();
+  music.start().then(syncMusicButton, showMusicError);
 });
 
 // Background tabs throttle timers, which would garble the rhythm; pause and pick up again on return.
@@ -140,7 +145,7 @@ document.addEventListener('visibilitychange', () => {
     music.stop();
     return;
   }
-  if (resumeMusicOnReturn) music.start().then(syncMusicButton);
+  if (resumeMusicOnReturn) music.start().then(syncMusicButton, showMusicError);
 });
 
 update(0);
