@@ -3,14 +3,16 @@
 Everything after `git push` is automatic.
 
 ```
-feature/*  ──push──▶  PR + tests  ──merge──▶  develop  ──tests──▶  main  ──▶  GitHub Pages
-fix/*                 deliver.yml              promote.yml          deploy.yml
-chore/*
+work branch  ──push──▶  PR + tests  ──merge──▶  develop  ──tests──▶  main  ──▶  GitHub Pages
+                        deliver.yml              promote.yml          deploy.yml
 ```
+
+Work branches: `feature/`, `fix/`, `chore/`, `refactor/`, `docs/`, `test/`, `perf/` and the
+`dependabot/` branches opened by the weekly action updates (`.github/dependabot.yml`).
 
 | Branch    | How it changes                                        | Guard                                         |
 |-----------|-------------------------------------------------------|-----------------------------------------------|
-| `feature/*`, `fix/*`, `chore/*` | Direct pushes                   | `deliver.yml` tests every push                |
+| Work branches | Direct pushes                                     | `deliver.yml` tests every push                |
 | `develop` | Merged by `deliver.yml`, or by a PR with green tests  | Required check `tests / test`, no force push  |
 | `main`    | Fast-forwarded by `promote.yml` only                  | Only the deploy key may update it             |
 
@@ -20,6 +22,7 @@ chore/*
 2. `deliver.yml` opens a pull request into `develop` (or reuses the open one) and runs the tests.
 3. When the tests pass it merges the pushed commit into `develop`; GitHub marks the PR as merged.
    A failing test or a merge conflict leaves the PR open for a fix.
+   After the merge the work branch is deleted, unless a newer commit arrived meanwhile.
 4. `promote.yml` retests `develop` and fast-forwards `main` to that exact commit.
 5. `deploy.yml` publishes `site/` to GitHub Pages.
 
