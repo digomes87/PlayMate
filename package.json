@@ -1,0 +1,12 @@
+{
+  "name": "playmate",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "python3 -m http.server 8000 --directory site"
+  }
+}
