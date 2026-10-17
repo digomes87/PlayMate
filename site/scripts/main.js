@@ -3,6 +3,7 @@ import { drawDog, drawFire, drawFireGlow, drawGaucho, drawStones, isKettleOnFire
 import { drawHerd, updateHerd } from './herd.js';
 import { TUFTS, buildLandscape, drawTuft } from './landscape.js';
 import { lightAt } from './light.js';
+import { createMusicPlayer } from './music/player.js';
 import { drawParticles, updateParticles } from './particles.js';
 import { HEIGHT, WIDTH, rgba } from './pixel-math.js';
 import { ritualAt } from './ritual.js';
@@ -110,6 +111,36 @@ playButton.addEventListener('click', () => {
   state.playing = !state.playing;
   state.dirty = true;
   syncControls();
+});
+
+const music = createMusicPlayer();
+const musicButton = document.getElementById('toggle-music');
+let resumeMusicOnReturn = false;
+
+function syncMusicButton() {
+  const playing = music.isPlaying();
+  musicButton.setAttribute('aria-pressed', String(playing));
+  musicButton.textContent = musicButton.dataset[playing ? 'labelStop' : 'labelStart'];
+}
+
+musicButton.addEventListener('click', async () => {
+  if (music.isPlaying()) {
+    music.stop();
+    syncMusicButton();
+    return;
+  }
+  await music.start();
+  syncMusicButton();
+});
+
+// Background tabs throttle timers, which would garble the rhythm; pause and pick up again on return.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    resumeMusicOnReturn = music.isPlaying();
+    music.stop();
+    return;
+  }
+  if (resumeMusicOnReturn) music.start().then(syncMusicButton);
 });
 
 update(0);
