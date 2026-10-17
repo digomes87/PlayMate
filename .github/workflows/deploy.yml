@@ -1,6 +1,7 @@
 name: deploy
 
 # main only ever receives commits already tested by the promote workflow.
+# The static site in site/ is published to GitHub Pages.
 
 on:
   push:
@@ -9,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: deploy-production
@@ -16,10 +19,15 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
-    environment: production
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy
-        run: ./scripts/ci/deploy.sh
+      - uses: actions/checkout@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

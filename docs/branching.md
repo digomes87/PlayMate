@@ -18,14 +18,14 @@ chore/*                └─ promote.yml               └─ deploy.yml
 2. Open a PR into `develop`. It can only merge with `tests / test` green.
 3. On every push to `develop`, `promote.yml` reruns the tests and, if they pass,
    fast-forwards `main` to that exact commit.
-4. The push to `main` triggers `deploy.yml`.
+4. The push to `main` triggers `deploy.yml`, which publishes `site/` to GitHub Pages.
 
 Urgent fixes follow the same path (`fix/*` → `develop`); `main` is never edited directly.
 
 ## Hooks for the stack
 
 - Tests: `scripts/ci/test.sh` runs every detected suite (npm, pytest, go, cargo).
-- Deploy: `scripts/ci/deploy.sh` is the single deploy entry point.
+- Deploy: everything under `site/` is published as-is to GitHub Pages.
 
 ## One-time setup
 

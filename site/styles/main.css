@@ -1,0 +1,150 @@
+/* Layout: one column; the scene is the page, with a game-style HUD strip under it and field notes below. */
+:root {
+  --bg: #15130e;
+  --surface: #211d16;
+  --line: #3b3326;
+  --shadow: #0a0907;
+  --fg: #efe6d0;
+  --muted: #b5a888;
+  --accent: #d9b23a;
+  --erva: #8fb043;
+  --on-accent: #1a1408;
+  --font-display: "Pixelify Sans", "Courier New", monospace;
+  --font-body: "Alegreya Sans", "Trebuchet MS", sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 22px;
+}
+
+.masthead { display: grid; gap: 6px; }
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--erva);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 1.4rem + 4vw, 4.4rem);
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.lede { margin: 0; max-width: 60ch; color: var(--muted); }
+
+.stage-frame {
+  margin: 0;
+  padding: 6px;
+  background: var(--shadow);
+  box-shadow: 0 0 0 3px var(--line), 8px 8px 0 3px var(--shadow);
+}
+
+#stage {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hud-group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+button {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--shadow);
+  transition: transform 80ms steps(2), box-shadow 80ms steps(2);
+}
+
+button:hover { border-color: var(--muted); }
+button:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--shadow); }
+button:focus-visible { outline: 2px solid var(--erva); outline-offset: 3px; }
+
+.hud-group [aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.counter {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--muted);
+}
+
+.counter strong {
+  color: var(--accent);
+  font-size: 1.5em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.notes { display: grid; gap: 14px; padding-top: 10px; border-top: 2px dashed var(--line); }
+
+.notes h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--erva);
+}
+
+.notes dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px 28px;
+}
+
+.notes div { min-width: 0; }
+
+.notes dt {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.notes dd { margin: 4px 0 0; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  button { transition: none; }
+}

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mate no Pampa</title>
+  <meta name="description" content="Um gaúcho toma chimarrão junto ao fogo de chão enquanto o gado pasta no pampa, em pixel art.">
+  <meta name="theme-color" content="#15130e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Alegreya+Sans:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles/main.css">
+  <script type="module" src="scripts/main.js"></script>
+</head>
+<body>
+<main class="page">
+  <header class="masthead">
+    <p class="eyebrow">Rio Grande do Sul · pixel art</p>
+    <h1>Mate no Pampa</h1>
+    <p class="lede">Sentado num toco, junto ao fogo de chão, o gaúcho ceva o chimarrão e olha a coxilha, onde o gado, os cavalos e as ovelhas pastam devagar.</p>
+  </header>
+
+  <figure class="stage-frame">
+    <canvas id="stage" width="256" height="144" role="img"
+      aria-label="Animação em pixel art: um gaúcho de chapéu e bombacha toma chimarrão sentado num toco, ao lado de um fogo de chão com a chaleira e um cachorro dormindo, enquanto vacas, cavalos e ovelhas pastam no campo verde."></canvas>
+  </figure>
+
+  <section class="hud" aria-label="Controles da cena">
+    <div class="hud-group" role="group" aria-label="Hora do dia">
+      <button type="button" id="time-dawn" data-time="0.02" aria-pressed="false">Amanhecer</button>
+      <button type="button" id="time-noon" data-time="0.24" aria-pressed="false">Meio-dia</button>
+      <button type="button" id="time-dusk" data-time="0.55" aria-pressed="false">Entardecer</button>
+      <button type="button" id="time-night" data-time="0.80" aria-pressed="false">Noite</button>
+      <button type="button" id="time-cycle" data-time="cycle" aria-pressed="true">Ciclo do dia</button>
+    </div>
+    <div class="hud-group">
+      <button type="button" id="toggle-play" data-label-pause="Pausar" data-label-play="Continuar">Pausar</button>
+    </div>
+    <p class="counter" aria-live="polite"><strong id="cuia-count">0</strong> cuias cevadas</p>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-heading">
+    <h2 id="notes-heading">Na cena</h2>
+    <dl>
+      <div>
+        <dt>Cuia e bomba</dt>
+        <dd>Cuia de porongo com virola de alpaca. A bomba fica cravada na erva e não se mexe depois de cevado.</dd>
+      </div>
+      <div>
+        <dt>Chaleira no fogo</dt>
+        <dd>A água vai entre 70 e 80 °C. Se ferver, queima a erva e o mate fica amargo de mais.</dd>
+      </div>
+      <div>
+        <dt>Na coxilha</dt>
+        <dd>Gado Hereford de cara branca, cavalos crioulos tostado e baio, ovelhas Corriedale e um umbu solito no alto.</dd>
+      </div>
+      <div>
+        <dt>Quero-quero</dt>
+        <dd>A sentinela do pampa cruza o céu de dia. De noite o campo fica com os vaga-lumes e a luz do fogo.</dd>
+      </div>
+    </dl>
+  </section>
+</main>
+</body>
+</html>
