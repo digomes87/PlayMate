@@ -1,7 +1,9 @@
 name: tests
 
+# Called by deliver and promote; can also be started by hand.
 on:
   workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: read
