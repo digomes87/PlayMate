@@ -4,10 +4,19 @@ name: deliver
 # runs the tests and, when they pass, merges it into develop. The merge is
 # pushed with the deploy key so that it triggers the promote workflow; the
 # pull request is marked as merged by GitHub once its commits land on develop.
+# The work branch is then deleted, unless a newer commit arrived meanwhile.
 
 on:
   push:
-    branches: ['feature/**', 'fix/**', 'chore/**']
+    branches:
+      - 'feature/**'
+      - 'fix/**'
+      - 'chore/**'
+      - 'refactor/**'
+      - 'docs/**'
+      - 'test/**'
+      - 'perf/**'
+      - 'dependabot/**'
 
 permissions:
   contents: read
@@ -69,3 +78,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git merge --no-ff "$GITHUB_SHA" -m "Merge branch '$BRANCH' into develop"
           git push origin HEAD:refs/heads/develop
+      - name: Delete merged work branch
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: git push --force-with-lease="refs/heads/$BRANCH:$GITHUB_SHA" origin ":refs/heads/$BRANCH"
