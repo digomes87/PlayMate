@@ -1,0 +1,33 @@
+name: promote
+
+# Every commit that lands on develop is tested again; only a green commit is
+# fast-forwarded onto main. The push uses a deploy key (the only actor allowed
+# to update main) so that it also triggers the deploy workflow.
+
+on:
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: promote-to-main
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  promote:
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          ssh-key: ${{ secrets.PROMOTE_DEPLOY_KEY }}
+      - name: Fast-forward main to the tested commit
+        run: git push origin "${GITHUB_SHA}:refs/heads/main"
